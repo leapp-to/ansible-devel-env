@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  become_method: sudo
+
+  roles:
+      - common
+      - snactor
+      - actors
+      - daemon
+      - cli
+

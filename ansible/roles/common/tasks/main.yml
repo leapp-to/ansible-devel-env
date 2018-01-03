@@ -1,0 +1,16 @@
+---
+- name: Install python, if necessary
+  become: true
+  raw: "test -e /usr/bin/python || dnf install -y {{ common.python_pkg }}"
+
+- name: Install missing packages, if necessary
+  become: true
+  dnf:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ common.packages }}"
+
+- name: Create working dir
+  file:
+      path: "{{ common.workdir }}"
+      state: directory
