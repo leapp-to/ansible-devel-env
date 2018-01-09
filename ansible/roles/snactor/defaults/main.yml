@@ -4,12 +4,4 @@ snactor:
     git_repo: https://github.com/leapp-to/snactor.git
     git_dest: "{{ common.workdir }}/snactor/"
     conf_file: "{{ lookup('env', 'HOME')  }}/.snactor.cfg"
-    packages:
-        - PyYAML
-        - ansible
-        - python-pytest-cov
-        - python2-devel
-        - python2-jsl
-        - python2-jsonschema
-        - python2-pytest
-        - python2-six
+    package: "python-snactor"
