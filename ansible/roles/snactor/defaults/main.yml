@@ -1,0 +1,5 @@
+---
+snactor:
+    repository: "evilissimo/leapp"
+    package: "python-snactor"
+    conf_file: "{{ lookup('env', 'HOME') }}/.snactor.cfg"

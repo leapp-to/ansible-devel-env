@@ -1,0 +1,16 @@
+---
+- name: Install packages required by daemon, if necessary
+  become: true
+  dnf:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ daemon.packages }}"
+
+- name: Use go get to download leapp daemon and dependencies
+  raw: "go get {{ daemon.repo }}/..."
+
+- name: Add a symlink for daemon code to leapp working dir
+  file:
+      src: "{{ daemon.link_src }}"
+      dest: "{{ daemon.link_dest }}"
+      state: link
