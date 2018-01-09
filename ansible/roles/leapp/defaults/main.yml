@@ -1,0 +1,4 @@
+---
+leapp:
+    repo: https://github.com/leapp-to/leapp.git
+    dest: "{{ common.workdir }}/leapp/"
