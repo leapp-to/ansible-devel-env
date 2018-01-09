@@ -1,4 +1,8 @@
 daemon:
     repo: github.com/leapp-to/leapp-go
+    link_src: "{{ lookup('env', 'HOME') }}/go/src/github.com/leapp-to/leapp-go"
+    link_dest: "{{ common.workdir }}/leapp-go"
     packages:
         - golang
+        - golang-googlecode-tools-goimports
+        - golint
