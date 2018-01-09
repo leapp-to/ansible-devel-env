@@ -2,3 +2,5 @@ daemon:
     repo: github.com/leapp-to/leapp-go
     packages:
         - golang
+        - golang-googlecode-tools-goimports
+        - golint
