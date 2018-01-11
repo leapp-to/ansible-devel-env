@@ -1,4 +1,6 @@
 ---
 leapp:
-    repo: https://github.com/leapp-to/leapp.git
-    dest: "{{ common.workdir }}/leapp/"
+    git:
+        repo: "{{ lookup('env', 'LEAPP_LEAPP_GIT_REPO')|default('https://github.com/leapp-to/leapp.git', true) }}"
+        version: "{{ lookup('env', 'LEAPP_LEAPP_GIT_VERSION')|default('HEAD', true) }}"
+        dest: "{{ common.workdir }}/leapp/"

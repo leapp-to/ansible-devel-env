@@ -1,7 +1,11 @@
 ---
 snactor:
-    copr_repo: "evilissimo/leapp"
-    git_repo: https://github.com/leapp-to/snactor.git
-    git_dest: "{{ common.workdir }}/snactor/"
-    conf_file: "{{ lookup('env', 'HOME')  }}/.snactor.cfg"
+    copr:
+        repo: "evilissimo/leapp"
+    git:
+        repo: "{{ lookup('env', 'LEAPP_SNACTOR_GIT_REPO')|default('https://github.com/leapp-to/snactor.git', true) }}"
+        version: "{{ lookup('env', 'LEAPP_SNACTOR_GIT_VERSION')|default('HEAD', true) }}"
+        dest: "{{ common.workdir }}/snactor/"
+    conf:
+        file: "{{ lookup('env', 'HOME') }}/.snactor.cfg"
     package: "python-snactor"

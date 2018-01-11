@@ -1,5 +1,6 @@
 ---
 - name: Get leapp repository
   git:
-      repo: "{{ leapp.repo }}"
-      dest: "{{ leapp.dest }}"
+      repo: "{{ leapp.git.repo }}"
+      dest: "{{ leapp.git.dest }}"
+      version: "{{ leapp.git.version }}"

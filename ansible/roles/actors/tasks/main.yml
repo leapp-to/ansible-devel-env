@@ -1,8 +1,9 @@
 ---
 - name: Get leapp actors main repository
   git:
-      repo: "{{ actors.repo }}"
-      dest: "{{ actors.dest }}"
+      repo: "{{ actors.git.repo }}"
+      dest: "{{ actors.git.dest }}"
+      version: "{{ actors.git.version }}"
 
 - name: Install packages required by some actors, if necessary
   become: true
@@ -13,12 +14,12 @@
 
 - name: Add actors_dir to snactor conf file
   lineinfile:
-      path: "{{ snactor.conf_file }}"
+      path: "{{ snactor.conf.file }}"
       regexp: "^actors_dir:"
-      line: "actors_dir: {{ actors.actors_path }}"
+      line: "actors_dir: {{ actors.paths.actors }}"
 
 - name: Add schemas_dir to snactor conf file
   lineinfile:
-      path: "{{ snactor.conf_file }}"
+      path: "{{ snactor.conf.file }}"
       regexp: "^schemas_dir:"
-      line: "schemas_dir: {{ actors.schemas_path }}"
+      line: "schemas_dir: {{ actors.paths.schemas }}"

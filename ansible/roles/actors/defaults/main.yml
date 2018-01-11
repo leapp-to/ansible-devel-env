@@ -1,8 +1,11 @@
 ---
 actors:
-    repo: https://github.com/leapp-to/leapp-actors.git
-    dest: "{{ common.workdir }}/leapp-actors/"
-    actors_path: "{{ common.workdir }}/leapp-actors/src/actors/"
-    schemas_path: "{{ common.workdir }}/leapp-actors/src/schemas/"
+    git:
+        repo: "{{ lookup('env', 'LEAPP_ACTORS_GIT_REPO')|default('https://github.com/leapp-to/leapp-actors.git', true) }}"
+        version: "{{ lookup('env', 'LEAPP_ACTORS_GIT_VERSION')|default('HEAD', true) }}"
+        dest: "{{ common.workdir }}/leapp-actors/"
+    paths:
+        actors: "{{ common.workdir }}/leapp-actors/src/actors/"
+        schemas: "{{ common.workdir }}/leapp-actors/src/schemas/"
     packages:
         - augeas

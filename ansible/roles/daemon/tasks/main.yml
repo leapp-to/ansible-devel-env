@@ -7,10 +7,10 @@
   with_items: "{{ daemon.packages }}"
 
 - name: Use go get to download leapp daemon and dependencies
-  raw: "go get {{ daemon.repo }}/..."
+  raw: "go get {{ daemon.git.repo }}/..."
 
 - name: Add a symlink for daemon code to leapp working dir
   file:
-      src: "{{ daemon.link_src }}"
-      dest: "{{ daemon.link_dest }}"
+      src: "{{ daemon.link.src }}"
+      dest: "{{ daemon.link.dest }}"
       state: link

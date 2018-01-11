@@ -7,7 +7,7 @@
 
 - name: Enable leapp repository
   become: true
-  raw: "dnf copr enable -y {{ snactor.copr_repo }}"
+  raw: "dnf copr enable -y {{ snactor.copr.repo }}"
 
 - name: Get snactor build dependencies
   raw: "dnf repoquery -C --arch src --requires {{ snactor.package }} 2> /dev/null"
@@ -33,17 +33,18 @@
 
 - name: Get snactor repository
   git:
-      repo: "{{ snactor.git_repo }}"
-      dest: "{{ snactor.git_dest }}"
+      repo: "{{ snactor.git.repo }}"
+      dest: "{{ snactor.git.dest }}"
+      version: "{{ snactor.git.version }}"
 
 - name: Run install target
   become: true
   make:
-      chdir: "{{ snactor.git_dest }}"
+      chdir: "{{ snactor.git.dest }}"
       target: install
 
 - name: Create snactor conf file
   file:
-      path: "{{ snactor.conf_file }}"
+      path: "{{ snactor.conf.file }}"
       state: touch
       mode: 0644
