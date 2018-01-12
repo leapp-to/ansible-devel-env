@@ -37,11 +37,11 @@
       dest: "{{ snactor.git.dest }}"
       version: "{{ snactor.git.version }}"
 
-- name: Run install target
+- name: Build and install snactor package
   become: true
-  make:
+  command: "tito build --rpm -o {{ common.paths.tito }} -i"
+  args:
       chdir: "{{ snactor.git.dest }}"
-      target: install
 
 - name: Create snactor conf file
   file:

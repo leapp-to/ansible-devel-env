@@ -3,4 +3,4 @@ cli:
     git:
         repo: "{{ lookup('env', 'LEAPP_LEAPPCTL_GIT_REPO')|default('https://github.com/leapp-to/leappctl.git', true) }}"
         version: "{{ lookup('env', 'LEAPP_LEAPPCTL_GIT_VERSION')|default('HEAD', true) }}"
-        dest: "{{ common.workdir }}/leappctl/"
+        dest: "{{ common.paths.workdir }}/leappctl/"
