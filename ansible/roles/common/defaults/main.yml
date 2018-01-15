@@ -5,6 +5,7 @@ common:
         workdir: "{{ lookup('env', 'HOME') }}/leapp"
     packages:
         python: python2
+        epel: epel-release
         deps:
             - git
             - tito

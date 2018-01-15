@@ -5,12 +5,21 @@
       dest: "{{ actors.git.dest }}"
       version: "{{ actors.git.version }}"
 
-- name: Install packages required by some actors, if necessary
+- name: Install packages required by some actors on Fedora, if necessary
   become: true
   dnf:
       name: "{{ item }}"
       state: present
   with_items: "{{ actors.packages }}"
+  when: ansible_distribution == 'Fedora'
+
+- name: Install packages required by some actors on CentOS, if necessary
+  become: true
+  yum:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ actors.packages }}"
+  when: ansible_distribution == 'CentOS'
 
 - name: Add actors_dir to snactor conf file
   lineinfile:

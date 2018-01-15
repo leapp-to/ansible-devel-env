@@ -1,35 +1,94 @@
 ---
-- name: Install dnf-plugins-core to enable using copr repositories
-  become: true
-  dnf:
-      name: dnf-plugins-core
-      state: present
+- name: Install required packages for snactor on Fedora, if necessary
+  block:
+    - name: Install dnf-plugins-core on Fedora to enable using copr repositories
+      become: true
+      dnf:
+        name: dnf-plugins-core
+        state: present
 
-- name: Enable leapp repository
-  become: true
-  raw: "dnf copr enable -y {{ snactor.copr.repo }}"
+    - name: Enable leapp repository on Fedora
+      become: true
+      raw: "dnf copr enable -y {{ snactor.copr.repo }}"
+      register: coprenable
+      changed_when: "coprenable.rc != 0"
 
-- name: Get snactor build dependencies
-  raw: "dnf repoquery -C --arch src --requires {{ snactor.package }} 2> /dev/null"
-  register: builddeps
+    - name: Uninstall old version of snactor on Fedora, if necessary
+      become: true
+      dnf:
+        name: "{{ snactor.package }}"
+        state: absent
 
-- name: Install packages required while building snactor, if necessary
-  become: true
-  dnf:
-      name: "{{ item }}"
-      state: present
-  with_items: "{{ builddeps.stdout_lines }}"
+    - name: Get snactor build dependencies on Fedora
+      raw: "dnf repoquery -C --arch src --requires {{ snactor.package }} 2> /dev/null"
+      register: builddeps
+      changed_when: "builddeps.rc != 0"
 
-- name: Get snactor dependencies
-  raw: "dnf repoquery -C --requires {{ snactor.package }} 2> /dev/null"
-  register: pkgdeps
+    - name: Install packages required while building snactor on Fedora, if necessary
+      become: true
+      dnf:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ builddeps.stdout_lines }}"
 
-- name: Install packages required by snactor, if necessary
-  become: true
-  dnf:
-      name: "{{ item }}"
-      state: present
-  with_items: "{{ pkgdeps.stdout_lines }}"
+    - name: Get snactor dependencies on Fedora
+      raw: "dnf repoquery -C --requires {{ snactor.package }} 2> /dev/null"
+      register: pkgdeps
+      changed_when: "pkgdeps.rc != 0"
+
+    - name: Install packages required by snactor on Fedora, if necessary
+      become: true
+      dnf:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ pkgdeps.stdout_lines }}"
+
+  when: ansible_distribution == 'Fedora'
+
+- name: Install required packages for snactor on CentOS, if necessary
+  block:
+    - name: Install dnf-plugins-core on CentOS to enable using copr repositories
+      become: true
+      yum:
+        name: yum-plugin-copr
+        state: present
+
+    - name: Enable leapp repository on CentOS
+      become: true
+      raw: "yum copr enable -y {{ snactor.copr.repo }}"
+      register: coprenable
+      changed_when: "coprenable.rc != 0"
+
+    - name: Uninstall old version of snactor on CentOS, if necessary
+      become: true
+      yum:
+        name: "{{ snactor.package }}"
+        state: absent
+
+    - name: Get snactor build dependencies on CentOS
+      raw: "repoquery -C --archlist=src --requires {{ snactor.package }} 2> /dev/null"
+      register: builddeps
+      changed_when: "builddeps.rc != 0"
+
+    - name: Install packages required while building snactor on CentOS, if necessary
+      become: true
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ builddeps.stdout_lines }}"
+
+    - name: Get snactor dependencies on CentOS
+      raw: "repoquery -C --requires {{ snactor.package }} 2> /dev/null"
+      register: pkgdeps
+      changed_when: "pkgdeps.rc != 0"
+
+    - name: Install packages required by snactor on CentOS, if necessary
+      become: true
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ pkgdeps.stdout_lines }}"
+  when: ansible_distribution == 'CentOS'
 
 - name: Get snactor repository
   git:
