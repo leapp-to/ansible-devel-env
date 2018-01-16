@@ -19,17 +19,11 @@
         name: "{{ snactor.package }}"
         state: absent
 
-    - name: Get snactor build dependencies on Fedora
-      raw: "dnf repoquery -C --arch src --requires {{ snactor.package }} 2> /dev/null"
+    - name: Install snactor build dependencies on Fedora
+      become: true
+      raw: "dnf builddep -y {{ snactor.package }}"
       register: builddeps
       changed_when: "builddeps.rc != 0"
-
-    - name: Install packages required while building snactor on Fedora, if necessary
-      become: true
-      dnf:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ builddeps.stdout_lines }}"
 
     - name: Get snactor dependencies on Fedora
       raw: "dnf repoquery -C --requires {{ snactor.package }} 2> /dev/null"
@@ -65,17 +59,11 @@
         name: "{{ snactor.package }}"
         state: absent
 
-    - name: Get snactor build dependencies on CentOS
-      raw: "repoquery -C --archlist=src --requires {{ snactor.package }} 2> /dev/null"
+    - name: Install snactor build dependencies on CentOS
+      become: true
+      raw: "yum-builddep -y {{ snactor.package }}"
       register: builddeps
       changed_when: "builddeps.rc != 0"
-
-    - name: Install packages required while building snactor on CentOS, if necessary
-      become: true
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ builddeps.stdout_lines }}"
 
     - name: Get snactor dependencies on CentOS
       raw: "repoquery -C --requires {{ snactor.package }} 2> /dev/null"
