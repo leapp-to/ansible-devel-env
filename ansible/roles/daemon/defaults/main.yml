@@ -1,0 +1,17 @@
+daemon:
+    git:
+        repo: github.com/leapp-to/leapp-go
+    link:
+        src: "{{ lookup('env', 'HOME') }}/go/src/github.com/leapp-to/leapp-go"
+        dest: "{{ common.paths.workdir }}/leapp-go"
+    packages:
+        fedora:
+            - golang
+            - golang-googlecode-tools-goimports
+            - golint
+        centos:
+            - golang
+            - golang-googlecode-tools-goimports
+    missing:
+        centos:
+            - github.com/golang/lint/golint

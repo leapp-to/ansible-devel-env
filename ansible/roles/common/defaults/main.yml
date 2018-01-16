@@ -1,0 +1,13 @@
+---
+common:
+    paths:
+        tito: "{{ lookup('env', 'HOME') }}/leapp/pkgs"
+        workdir: "{{ lookup('env', 'HOME') }}/leapp"
+    packages:
+        python: python2
+        epel: epel-release
+        deps:
+            - git
+            - sudo
+            - make
+            - tito

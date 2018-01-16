@@ -1,0 +1,60 @@
+---
+- name: Check if /usr/bin/python does exist
+  raw: "test -e /usr/bin/python"
+  ignore_errors: yes
+  register: python_exists
+  changed_when: "python_exists.rc != 0"
+
+- name: Check if dnf is available
+  raw: "dnf --version"
+  ignore_errors: yes
+  register: dnf_available
+  changed_when: "dnf_available.rc != 0"
+  when: python_exists.failed
+
+- name: Check if yum is available
+  raw: "yum --version"
+  ignore_errors: yes
+  register: yum_available
+  changed_when: "yum_available.rc != 0"
+  when: python_exists.failed and dnf_available.failed
+
+- name: Bootstrap system with dnf missing python
+  become: true
+  raw: "dnf install -y {{ common.packages.python }}"
+  when: python_exists.failed and (not dnf_available.failed)
+
+- name: Bootstrap system with yum missing python
+  become: true
+  raw: "yum install -y {{ common.packages.python }}"
+  when: python_exists.failed and dnf_available.failed and (not yum_available.failed)
+
+- name: Gather system facts
+  action: setup
+
+- name: Install missing packages on Fedora system, if necessary
+  become: true
+  dnf:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ common.packages.deps }}"
+  when: ansible_distribution == 'Fedora'
+
+- name: Enable EPEL and install missing packages on CentOS system, if necessary
+  become: true
+  block:
+    - name: Enable EPEL on CentOS system, if necessary
+      yum:
+        name: "{{ common.packages.epel }}"
+        state: present
+    - name: Install missing packages on CentOS system, if necessary
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ common.packages.deps }}"
+  when: ansible_distribution == 'CentOS'
+
+- name: Create working dir
+  file:
+      path: "{{ common.paths.workdir }}"
+      state: directory

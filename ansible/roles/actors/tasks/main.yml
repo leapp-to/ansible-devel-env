@@ -1,0 +1,34 @@
+---
+- name: Get leapp actors main repository
+  git:
+      repo: "{{ actors.git.repo }}"
+      dest: "{{ actors.git.dest }}"
+      version: "{{ actors.git.version }}"
+
+- name: Install packages required by some actors on Fedora, if necessary
+  become: true
+  dnf:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ actors.packages }}"
+  when: ansible_distribution == 'Fedora'
+
+- name: Install packages required by some actors on CentOS, if necessary
+  become: true
+  yum:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ actors.packages }}"
+  when: ansible_distribution == 'CentOS'
+
+- name: Add actors_dir to snactor conf file
+  lineinfile:
+      path: "{{ snactor.conf.file }}"
+      regexp: "^actors_dir:"
+      line: "actors_dir: {{ actors.paths.actors }}"
+
+- name: Add schemas_dir to snactor conf file
+  lineinfile:
+      path: "{{ snactor.conf.file }}"
+      regexp: "^schemas_dir:"
+      line: "schemas_dir: {{ actors.paths.schemas }}"

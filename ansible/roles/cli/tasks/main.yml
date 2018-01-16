@@ -1,0 +1,6 @@
+---
+- name: Get leappctl repository
+  git:
+      repo: "{{ cli.git.repo }}"
+      dest: "{{ cli.git.dest }}"
+      version: "{{ cli.git.version }}"
