@@ -8,4 +8,5 @@ common:
         epel: epel-release
         deps:
             - git
+            - sudo
             - tito
