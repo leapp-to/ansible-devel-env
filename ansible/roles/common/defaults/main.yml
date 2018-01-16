@@ -9,4 +9,5 @@ common:
         deps:
             - git
             - sudo
+            - make
             - tito
