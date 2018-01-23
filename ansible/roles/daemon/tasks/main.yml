@@ -23,6 +23,13 @@
 - name: Use go get to download leapp daemon and dependencies
   raw: "go get {{ daemon.git.repo }}/..."
 
+- name: Install the Leapp-go dependencies and build it
+  shell: "cd {{ daemon.link.src }} && make install-deps build"
+
+- name: Install the Leapp-go binaries
+  become: true
+  shell: "cd {{ daemon.link.src }} && make install"
+
 - name: Add a symlink for daemon code to leapp working dir
   file:
       src: "{{ daemon.link.src }}"

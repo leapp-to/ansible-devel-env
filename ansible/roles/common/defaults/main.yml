@@ -11,3 +11,4 @@ common:
             - sudo
             - make
             - tito
+            - python2-pip

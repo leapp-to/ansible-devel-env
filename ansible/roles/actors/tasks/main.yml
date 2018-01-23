@@ -21,6 +21,17 @@
   with_items: "{{ actors.packages }}"
   when: ansible_distribution == 'CentOS'
 
+- name: "Install Leapp-Actors dependencies"
+  become: true
+  shell: "cd {{ actors.git.dest }} && make install-deps"
+
+- name: "build Leapp-Actors"
+  shell: "cd {{ actors.git.dest }} && make build"
+
+- name: "Install Leapp-Actors"
+  become: true
+  shell: "cd {{ actors.git.dest }} && make install"
+
 - name: Add actors_dir to snactor conf file
   lineinfile:
       path: "{{ snactor.conf.file }}"

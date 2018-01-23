@@ -1,94 +1,20 @@
 ---
-- name: Install required packages for snactor on Fedora, if necessary
-  block:
-    - name: Install dnf-plugins-core on Fedora to enable using copr repositories
-      become: true
-      dnf:
-        name: dnf-plugins-core
-        state: present
-
-    - name: Enable leapp repository on Fedora
-      become: true
-      raw: "dnf copr enable -y {{ snactor.copr.repo }}"
-      register: coprenable
-      changed_when: "coprenable.rc != 0"
-
-    - name: Uninstall old version of snactor on Fedora, if necessary
-      become: true
-      dnf:
-        name: "{{ snactor.package }}"
-        state: absent
-
-    - name: Install snactor build dependencies on Fedora
-      become: true
-      raw: "dnf builddep -y {{ snactor.package }}"
-      register: builddeps
-      changed_when: "builddeps.rc != 0"
-
-    - name: Get snactor dependencies on Fedora
-      raw: "dnf repoquery -C --requires {{ snactor.package }} 2> /dev/null"
-      register: pkgdeps
-      changed_when: "pkgdeps.rc != 0"
-
-    - name: Install packages required by snactor on Fedora, if necessary
-      become: true
-      dnf:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ pkgdeps.stdout_lines }}"
-
-  when: ansible_distribution == 'Fedora'
-
-- name: Install required packages for snactor on CentOS, if necessary
-  block:
-    - name: Install dnf-plugins-core on CentOS to enable using copr repositories
-      become: true
-      yum:
-        name: yum-plugin-copr
-        state: present
-
-    - name: Enable leapp repository on CentOS
-      become: true
-      raw: "yum copr enable -y {{ snactor.copr.repo }}"
-      register: coprenable
-      changed_when: "coprenable.rc != 0"
-
-    - name: Uninstall old version of snactor on CentOS, if necessary
-      become: true
-      yum:
-        name: "{{ snactor.package }}"
-        state: absent
-
-    - name: Install snactor build dependencies on CentOS
-      become: true
-      raw: "yum-builddep -y {{ snactor.package }}"
-      register: builddeps
-      changed_when: "builddeps.rc != 0"
-
-    - name: Get snactor dependencies on CentOS
-      raw: "repoquery -C --requires {{ snactor.package }} 2> /dev/null"
-      register: pkgdeps
-      changed_when: "pkgdeps.rc != 0"
-
-    - name: Install packages required by snactor on CentOS, if necessary
-      become: true
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ pkgdeps.stdout_lines }}"
-  when: ansible_distribution == 'CentOS'
-
 - name: Get snactor repository
   git:
       repo: "{{ snactor.git.repo }}"
       dest: "{{ snactor.git.dest }}"
       version: "{{ snactor.git.version }}"
 
-- name: Build and install snactor package
+- name: Install snactor package dependencies
   become: true
-  command: "tito build --rpm -o {{ common.paths.tito }} -i"
-  args:
-      chdir: "{{ snactor.git.dest }}"
+  shell: "cd {{ snactor.git.dest }} && make install-deps"
+
+- name: Build snactor package
+  shell: "cd {{ snactor.git.dest }} && make build"
+
+- name: Install snactor package
+  become: true
+  shell: "cd {{ snactor.git.dest }} && make install"
 
 - name: Create snactor conf file
   file:

@@ -5,7 +5,7 @@ actors:
         version: "{{ lookup('env', 'LEAPP_ACTORS_GIT_VERSION')|default('HEAD', true) }}"
         dest: "{{ common.paths.workdir }}/leapp-actors/"
     paths:
-        actors: "{{ common.paths.workdir }}/leapp-actors/src/actors/"
-        schemas: "{{ common.paths.workdir }}/leapp-actors/src/schemas/"
+        actors: "/usr/share/leapp/actors/"
+        schemas: "/usr/share/leapp/schemas/"
     packages:
         - augeas

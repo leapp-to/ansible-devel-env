@@ -4,3 +4,14 @@
       repo: "{{ leapp.git.repo }}"
       dest: "{{ leapp.git.dest }}"
       version: "{{ leapp.git.version }}"
+
+- name: Install Leapp dependencies
+  become: true
+  shell: "cd {{ leapp.git.dest }} && make install-deps"
+
+- name: Build Leapp
+  shell: "cd {{ leapp.git.dest }} && make build"
+
+- name: Install Leapp
+  become: true
+  shell: "cd {{ leapp.git.dest }} && make install"
