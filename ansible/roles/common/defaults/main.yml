@@ -12,3 +12,4 @@ common:
             - make
             - tito
             - python2-pip
+            - libselinux-python
