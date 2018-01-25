@@ -4,3 +4,9 @@
       repo: "{{ leapp.git.repo }}"
       dest: "{{ leapp.git.dest }}"
       version: "{{ leapp.git.version }}"
+
+- name: Install & build Leapp
+  block:
+    - become: "{{ item.become }}"
+      shell: "cd {{ leapp.git.dest }} && make {{ item.name }}"
+      with_items: "{{ common.build_steps }}"
