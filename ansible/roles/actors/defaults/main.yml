@@ -4,8 +4,5 @@ actors:
         repo: "{{ lookup('env', 'LEAPP_ACTORS_GIT_REPO')|default('https://github.com/leapp-to/leapp-actors.git', true) }}"
         version: "{{ lookup('env', 'LEAPP_ACTORS_GIT_VERSION')|default('HEAD', true) }}"
         dest: "{{ common.paths.workdir }}/leapp-actors/"
-    paths:
-        actors: "/usr/share/leapp/actors/"
-        schemas: "/usr/share/leapp/schemas/"
     packages:
         - augeas

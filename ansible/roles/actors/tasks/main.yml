@@ -31,15 +31,3 @@
 - name: "Install Leapp-Actors"
   become: true
   shell: "cd {{ actors.git.dest }} && make install"
-
-- name: Add actors_dir to snactor conf file
-  lineinfile:
-      path: "{{ snactor.conf.file }}"
-      regexp: "^actors_dir:"
-      line: "actors_dir: {{ actors.paths.actors }}"
-
-- name: Add schemas_dir to snactor conf file
-  lineinfile:
-      path: "{{ snactor.conf.file }}"
-      regexp: "^schemas_dir:"
-      line: "schemas_dir: {{ actors.paths.schemas }}"
