@@ -4,5 +4,3 @@ snactor:
         repo: "{{ lookup('env', 'LEAPP_SNACTOR_GIT_REPO')|default('https://github.com/leapp-to/snactor.git', true) }}"
         version: "{{ lookup('env', 'LEAPP_SNACTOR_GIT_VERSION')|default('HEAD', true) }}"
         dest: "{{ common.paths.workdir }}/snactor/"
-    conf:
-        file: "{{ lookup('env', 'HOME') }}/.snactor.cfg"

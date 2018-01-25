@@ -5,19 +5,8 @@
       dest: "{{ snactor.git.dest }}"
       version: "{{ snactor.git.version }}"
 
-- name: Install snactor package dependencies
-  become: true
-  shell: "cd {{ snactor.git.dest }} && make install-deps"
-
-- name: Build snactor package
-  shell: "cd {{ snactor.git.dest }} && make build"
-
-- name: Install snactor package
-  become: true
-  shell: "cd {{ snactor.git.dest }} && make install"
-
-- name: Create snactor conf file
-  file:
-      path: "{{ snactor.conf.file }}"
-      state: touch
-      mode: 0644
+- name: Install & build Snactor 
+  block:
+    - become: "{{ item.become }}"
+      shell: "cd {{ snactor.git.dest }} && make {{ item.name }}"
+      with_items: "{{ common.build_steps }}"

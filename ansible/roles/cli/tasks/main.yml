@@ -5,13 +5,8 @@
       dest: "{{ cli.git.dest }}"
       version: "{{ cli.git.version }}"
 
-- name: Install leappctl dependencies
-  become: true
-  shell: "cd {{ cli.git.dest }} && make install-deps"
-
-- name: Build leappctl dependencies
-  shell: "cd {{ cli.git.dest }} && make build"
-
-- name: Install leappctl
-  become: true
-  shell: "cd {{ cli.git.dest }} && make install"
+- name: Install & build Leappctl
+  block:
+    - become: "{{ item.become }}"
+      shell: "cd {{ cli.git.dest }} && make {{ item.name }}"
+      with_items: "{{ common.build_steps }}"

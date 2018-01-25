@@ -21,13 +21,8 @@
   with_items: "{{ actors.packages }}"
   when: ansible_distribution == 'CentOS'
 
-- name: "Install Leapp-Actors dependencies"
-  become: true
-  shell: "cd {{ actors.git.dest }} && make install-deps"
-
-- name: "build Leapp-Actors"
-  shell: "cd {{ actors.git.dest }} && make build"
-
-- name: "Install Leapp-Actors"
-  become: true
-  shell: "cd {{ actors.git.dest }} && make install"
+- name: Install & build Leapp actors
+  block:
+    - become: "{{ item.become }}"
+      shell: "cd {{ actors.git.dest }} && make {{ item.name }}"
+      with_items: "{{ common.build_steps }}"

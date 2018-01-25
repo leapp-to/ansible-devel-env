@@ -1,5 +1,12 @@
 ---
 common:
+    build_steps:
+        - name: install-deps
+          become: true
+        - name: build
+          become: false
+        - name: install
+          become: true
     paths:
         tito: "{{ lookup('env', 'HOME') }}/leapp/pkgs"
         workdir: "{{ lookup('env', 'HOME') }}/leapp"
