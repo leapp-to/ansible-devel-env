@@ -32,27 +32,19 @@
 - name: Gather system facts
   action: setup
 
-- name: Install missing packages on Fedora system, if necessary
+- name: Enable EPEL on CentOS system, if necessary
   become: true
-  dnf:
+  yum:
+    name: "{{ common.packages.epel }}"
+    state: present
+  when: ansible_distribution == 'CentOS'
+
+- name: Install missing packages on system, if necessary
+  become: true
+  package:
     name: "{{ item }}"
     state: present
   with_items: "{{ common.packages.deps }}"
-  when: ansible_distribution == 'Fedora'
-
-- name: Enable EPEL and install missing packages on CentOS system, if necessary
-  become: true
-  block:
-    - name: Enable EPEL on CentOS system, if necessary
-      yum:
-        name: "{{ common.packages.epel }}"
-        state: present
-    - name: Install missing packages on CentOS system, if necessary
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ common.packages.deps }}"
-  when: ansible_distribution == 'CentOS'
 
 - name: Create working dir
   file:
