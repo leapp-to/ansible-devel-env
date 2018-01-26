@@ -1,5 +1,12 @@
 ---
-- name: Install packages required by daemon on Fedora, if necessary
+- name: Install packages required by daemon, if necessary
+  become: true
+  package:
+      name: "{{ item }}"
+      state: present
+  with_items: "{{ daemon.packages.common }}"
+
+- name: Install packages required by daemon spacific for Fedora, if necessary
   become: true
   dnf:
       name: "{{ item }}"
@@ -7,17 +14,9 @@
   with_items: "{{ daemon.packages.fedora }}"
   when: ansible_distribution == 'Fedora'
 
-- name: Install packages required by daemon on CentOS, if necessary
-  block:
-    - name: Install packages required by daemon on CentOS, if necessary
-      become: true
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ daemon.packages.centos }}"
-    - name: Go get missing packages required by daemon on CentOS, if necessary
-      raw: "go get -u {{ item }}"
-      with_items: "{{ daemon.missing.centos }}"
+- name: Go get missing packages required by daemon on CentOS, if necessary
+  raw: "go get -u {{ item }}"
+  with_items: "{{ daemon.missing.centos }}"
   when: ansible_distribution == 'CentOS'
 
 - name: Use go get to download leapp daemon and dependencies

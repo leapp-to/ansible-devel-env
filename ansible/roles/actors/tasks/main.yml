@@ -5,21 +5,12 @@
       dest: "{{ actors.git.dest }}"
       version: "{{ actors.git.version }}"
 
-- name: Install packages required by some actors on Fedora, if necessary
+- name: Install packages required by some actors, if necessary
   become: true
-  dnf:
+  package:
       name: "{{ item }}"
       state: present
   with_items: "{{ actors.packages }}"
-  when: ansible_distribution == 'Fedora'
-
-- name: Install packages required by some actors on CentOS, if necessary
-  become: true
-  yum:
-      name: "{{ item }}"
-      state: present
-  with_items: "{{ actors.packages }}"
-  when: ansible_distribution == 'CentOS'
 
 - name: Install & build Leapp actors
   block:
