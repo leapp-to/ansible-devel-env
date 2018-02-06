@@ -1,4 +1,11 @@
 daemon:
+    build_steps:
+        - name: install-deps
+          become: false         ## All deps are installed in ~/go
+        - name: build
+          become: false
+        - name: install
+          become: true
     git:
         repo: github.com/leapp-to/leapp-go
     link:
