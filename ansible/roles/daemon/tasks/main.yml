@@ -26,7 +26,7 @@
   block:
     - become: "{{ item.become }}"
       shell: "cd {{ daemon.link.src }} && make {{ item.name }}"
-      with_items: "{{ common.build_steps }}"
+      with_items: "{{ daemon.build_steps }}"
 
 - name: Add a symlink for daemon code to leapp working dir
   file:
